@@ -37,6 +37,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'api',
     'config',
+    'djoser',
     'rest_framework',
     'rest_framework.authtoken',
     'django.contrib.admin',
