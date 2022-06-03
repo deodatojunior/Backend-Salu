@@ -19,11 +19,11 @@ from api.views.company import CompanyViewSet
 from rest_framework import routers
 
 routes = routers.DefaultRouter()
-routes.register("Company", CompanyViewSet)
+routes.register("company", CompanyViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
-    path('company/', include(routes.urls))
+    path('api/v1/', include(routes.urls))
 ]
