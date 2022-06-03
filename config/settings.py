@@ -31,9 +31,6 @@ DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = ['*']
 
-
-# Application definition
-
 INSTALLED_APPS = [
     'api',
     'config',
@@ -47,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+AUTH_USER_MODEL = 'api'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
