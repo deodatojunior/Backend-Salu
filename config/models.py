@@ -4,7 +4,7 @@ from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser)
 from django.utils.translation import gettext as _
 
 
-class User(AbstractUser):
+class User(AbstractBaseUser):
     name = models.CharField(max_length=100, verbose_name=_('Nome'))
     cpf = models.CharField(max_length=100, verbose_name=_('CPF'))
     sex = models.CharField(max_length=100, verbose_name=_('Sexo'))
@@ -19,12 +19,14 @@ class User(AbstractUser):
     uf = models.CharField(max_length=2, verbose_name=_('UF'))
     isActive = models.BooleanField(default=True)
     isAdmin = models.BooleanField(default=False)
-    isEmpresa = models.BooleanFiel()
+    isEmpresa = models.BooleanField()
     isProfissional = models.BooleanField()
     tipoPlano = models.IntegerField(max_length=1, verbose_name=_('Tipo de plano'))
     createdAt = models.DateTimeField(auto_now=True, verbose_name=_('Data de Criação'))
     updatedAt = models.DateTimeField(auto_now=True, verbose_name=_('Data de Modificação'))
     companyId = models.ForeignKey(Company, on_delete=models.CASCADE, verbose_name=_('Empresa'))
+
+    USERNAME_FIELD = 'email'
 
 
 class UserManager(BaseUserManager):
