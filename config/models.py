@@ -2,6 +2,55 @@ from django.db import models
 from api.models.company.models import Company
 from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser)
 from django.utils.translation import gettext as _
+from django.utils import timezone
+
+
+class UserManager(BaseUserManager):
+    def _create_user(self, email, password, name, cpf, sex, phone, cep,
+                     address, number, neighborhood, city, uf, isActive, isAdmin,
+                     isEmpresa, isProfissional, tipoPlano, companyId):
+        now = timezone.now()
+        company = Company.objects.get(pk=companyId)
+        email = self.normalize_email(email)
+        user = self.model(email=email,
+                          password=password,
+                          name=name,
+                          cpf=cpf,
+                          sex=sex,
+                          phone=phone,
+                          cep=cep,
+                          address=address,
+                          number=number,
+                          neighborhood=neighborhood,
+                          city=city,
+                          uf=uf,
+                          isActive=isActive,
+                          isAdmin=isAdmin,
+                          isEmpresa=isEmpresa,
+                          isProfissional=isProfissional,
+                          tipoPlano=tipoPlano,
+                          createdAt=now,
+                          updatedAt=now,
+                          companyId=company)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, email, password, name, cpf, sex, phone, cep,
+                    address, number, neighborhood, city, uf, isActive, isAdmin,
+                    isEmpresa, isProfissional, tipoPlano, companyId):
+        return self._create_user(email, password, name, cpf, sex, phone, cep,
+                                 address, number, neighborhood, city, uf, isActive, isAdmin,
+                                 isEmpresa, isProfissional, tipoPlano, companyId)
+
+    def create_superuser(self, email, password, name, cpf, sex, phone, cep,
+                         address, number, neighborhood, city, uf, isActive, isAdmin,
+                         isEmpresa, isProfissional, tipoPlano, companyId):
+        user = self._create_user(email, password, name, cpf, sex, phone, cep,
+                                 address, number, neighborhood, city, uf, isActive, isAdmin,
+                                 isEmpresa, isProfissional, tipoPlano, companyId)
+        user.save(using=self._db)
+        return user
 
 
 class User(AbstractBaseUser):
@@ -27,35 +76,8 @@ class User(AbstractBaseUser):
     companyId = models.ForeignKey(Company, on_delete=models.CASCADE, verbose_name=_('Empresa'))
 
     USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['password', 'name', 'cpf', 'sex', 'phone', 'cep',
+                       'address', 'number', 'neighborhood', 'city', 'uf', 'isActive', 'isAdmin',
+                       'isEmpresa', 'isProfissional', 'tipoPlano', 'companyId']
 
-
-class UserManager(BaseUserManager):
-    def create_user(self, email, password=None):
-        """
-        Creates and saves a User with the given email, date of
-        birth and password.
-        """
-        if not email:
-            raise ValueError('Users must have an email address')
-
-        user = self.model(
-            email=self.normalize_email(email),
-            cpf=cpf,
-        )
-
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, email, password):
-        """
-        Creates and saves a superuser with the given email, date of
-        birth and password.
-        """
-        user = self.create_user(
-            email,
-            password=password,
-        )
-        user.is_admin = True
-        user.save(using=self._db)
-        return user
+    objects = UserManager()
