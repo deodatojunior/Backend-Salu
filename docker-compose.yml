@@ -15,7 +15,7 @@ services:
   web:
     build: .
     restart: on-failure
-    command: bash -c "python manage.py makemigrations && python manage.py makemigrations config && python manage.py migrate && python manage.py runserver 0.0.0.0"
+    command: bash -c "python manage.py makemigrations && python manage.py makemigrations config && python manage.py migrate && python manage.py runserver 0.0.0.0:80"
     volumes:
       - .:/code
     ports:
